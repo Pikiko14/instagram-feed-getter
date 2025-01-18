@@ -147,7 +147,7 @@ app.get("/get-feeds", tokenValidator, async (req, res) => {
     const feeds = response.data.data; // Los datos del feed estarán en la propiedad `data`
 
     // Devolver la información de los feeds
-    return res.json(feeds);
+    return res.json({ success: true, data: feeds });
   } catch (error) {
     console.error(
       "Error getting feeds:",
