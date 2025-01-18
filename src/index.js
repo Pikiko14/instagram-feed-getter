@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const qs = require("qs");
 const redis = require("redis");
 const cors = require("cors");
+const hostValidator = require('./middlewares/hostValidator');
+const tokenValidator = require('./middlewares/tokenValidator');
 
 dotenv.config();
 
@@ -11,8 +13,13 @@ const app = express();
 const port = 3081;
 
 const corsOptions = {
-  origin: ['http://localhost:9000', 'http://localhost:9200', "https://app.motowork.xyz", "http://localhost:9001"],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  origin: [
+    "http://localhost:9000",
+    "http://localhost:9200",
+    "https://app.motowork.xyz",
+    "http://localhost:9001",
+  ],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
 };
@@ -28,7 +35,7 @@ redisClient.on("error", (err) => console.error("Redis error:", err));
 redisClient.connect();
 
 // Ruta para redirigir al usuario a la página de autorización de Instagram
-app.get("/auth", async (req, res) => {
+app.get("/auth", hostValidator, async (req, res) => {
   const cachedToken = await redisClient.get("access_token");
   const session = await validateToken();
 
@@ -79,7 +86,7 @@ app.get("/auth/callback", async (req, res) => {
 });
 
 // Ruta para validar y extender un token
-app.get("/validate-and-extend-token", async (req, res) => {
+app.get("/validate-and-extend-token", hostValidator, async (req, res) => {
   const cachedToken = await redisClient.get("access_token");
 
   if (cachedToken) {
@@ -104,7 +111,6 @@ app.get("/validate-and-extend-token", async (req, res) => {
 
       res.redirect(process.env.APP_URL);
     } catch (error) {
-      console.log(error.response.data)
       res.send(error.message);
     }
   } else {
@@ -113,13 +119,13 @@ app.get("/validate-and-extend-token", async (req, res) => {
 });
 
 // Ruta para obtener los feeds de Instagram
-app.get("/get-feeds", async (req, res) => {
+app.get("/get-feeds", tokenValidator, async (req, res) => {
   // Validar token
   const tokenValidation = await validateToken();
-  
+
   // Check if the token is valid
   if (tokenValidation.error) {
-    return res.status(400).send('Token invalid.');
+    return res.status(400).send("Token invalid.");
   }
 
   // Obtener el token de acceso desde Redis
@@ -143,13 +149,16 @@ app.get("/get-feeds", async (req, res) => {
     // Devolver la información de los feeds
     return res.json(feeds);
   } catch (error) {
-    console.error("Error getting feeds:", error.response?.data || error.message);
+    console.error(
+      "Error getting feeds:",
+      error.response?.data || error.message
+    );
     return res.status(500).send("Error retrieving feeds.");
   }
 });
 
 // get session data
-app.get("/session/status", async(req, res) => {
+app.get("/session/status", tokenValidator, async (req, res) => {
   try {
     let session = await redisClient.get("user_session");
     if (session) {
@@ -163,13 +172,13 @@ app.get("/session/status", async(req, res) => {
     if (session.error) {
       return res.status(500).json(session);
     }
-    
+
     await redisClient.setEx("user_session", 86400, JSON.stringify(session));
     res.status(200).json(session);
   } catch (error) {
     return res.status(500).json(error);
   }
-})
+});
 
 // validate token
 const validateToken = async () => {
@@ -178,7 +187,10 @@ const validateToken = async () => {
     const accessToken = await redisClient.get("access_token");
 
     if (!accessToken) {
-      return { error: true, message: "No se ha encontrado una sesión con instagram." };
+      return {
+        error: true,
+        message: "No se ha encontrado una sesión con instagram.",
+      };
     }
 
     // Validar el token llamando a la API de Instagram
@@ -190,7 +202,12 @@ const validateToken = async () => {
     });
 
     if (response.data && response.data.id) {
-      return { error: false, message: "Token is valid", userId: response.data.id, response: response.data };
+      return {
+        error: false,
+        message: "Token is valid",
+        userId: response.data.id,
+        response: response.data,
+      };
     } else {
       return { error: true, message: "La sesión expiro" };
     }
