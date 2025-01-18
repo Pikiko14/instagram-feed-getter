@@ -141,6 +141,7 @@ app.get("/get-feeds", tokenValidator, async (req, res) => {
       params: {
         fields: "id,caption,media_type,media_url,thumbnail_url,timestamp",
         access_token: accessToken,
+        limit: 4
       },
     });
 
