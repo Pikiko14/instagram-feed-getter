@@ -18,6 +18,7 @@ const corsOptions = {
     "http://localhost:9200",
     "https://app.motowork.xyz",
     "http://localhost:9001",
+    "http://testbanner.test"
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
