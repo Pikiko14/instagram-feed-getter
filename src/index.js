@@ -77,6 +77,10 @@ app.get("/auth/callback", async (req, res) => {
     const { access_token } = response.data;
 
     // Guardar el token en Redis con un tiempo de expiración de 1 dias
+    const cachedToken = await redisClient.get("access_token");
+    if (cachedToken) {
+      await redisClient.del("access_token");
+    }
     await redisClient.setEx("access_token", 86400, access_token);
 
     res.redirect(process.env.APP_URL);
