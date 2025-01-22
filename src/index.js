@@ -125,6 +125,12 @@ app.get("/validate-and-extend-token", hostValidator, async (req, res) => {
 
 // Ruta para obtener los feeds de Instagram
 app.get("/get-feeds", tokenValidator, async (req, res) => {
+  const cachedFeeds = await redisClient.get("feeds_items");
+
+  if (cachedFeeds) {
+    return res.json({ success: true, data: JSON.parse(cachedFeeds) });
+  }
+
   // Validar token
   const tokenValidation = await validateToken();
 
@@ -149,6 +155,10 @@ app.get("/get-feeds", tokenValidator, async (req, res) => {
         limit: 4
       },
     });
+
+    if (response.data.data) {
+      await redisClient.setEx('feeds_items', 86400, JSON.stringify(response.data.data))
+    }
 
     const feeds = response.data.data; // Los datos del feed estarán en la propiedad `data`
 
