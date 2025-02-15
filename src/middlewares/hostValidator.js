@@ -12,17 +12,15 @@ const hostValidator = async (req, res, next) => {
     ];
 
     const referer = req.get("Referer");
-    console.log(referer);
 
     // Verificar si el origen está permitido
     if (!availableOrigin.includes(referer)) {
       return res.status(403).send("Acceso no permitido desde este origen");
     }
-    console.log('cumplo con la condicion');
 
     next();
   } catch (error) {
-    return res.status(403).send("No puedes acceder a esta solicitud");
+    return res.status(403).send("No puedes acceder a esta solicitud5555");
   }
 };
 
