@@ -5,6 +5,10 @@ const hostValidator = async (req, res, next) => {
       "http://localhost:9200/",
       "https://app.motowork.xyz/",
       "http://localhost:9001/",
+      "http://admin.motowork.xyz/",
+      "https://admin.motowork.xyz",
+      "http://app.motowork.xyz",
+      "https://app.motowork.xyz",
     ];
 
     const referer = req.get("Referer");
