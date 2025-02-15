@@ -4,8 +4,8 @@ const dotenv = require("dotenv");
 const qs = require("qs");
 const redis = require("redis");
 const cors = require("cors");
-const hostValidator = require('./middlewares/hostValidator');
-const tokenValidator = require('./middlewares/tokenValidator');
+const hostValidator = require("./middlewares/hostValidator");
+const tokenValidator = require("./middlewares/tokenValidator");
 
 dotenv.config();
 
@@ -18,7 +18,11 @@ const corsOptions = {
     "http://localhost:9200",
     "https://app.motowork.xyz",
     "http://localhost:9001",
-    "http://testbanner.test"
+    "http://testbanner.test",
+    "http://admin.motowork.xyz/",
+    "https://admin.motowork.xyz",
+    "http://app.motowork.xyz",
+    "https://app.motowork.xyz",
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
@@ -152,12 +156,16 @@ app.get("/get-feeds", tokenValidator, async (req, res) => {
       params: {
         fields: "id,caption,media_type,media_url,thumbnail_url,timestamp",
         access_token: accessToken,
-        limit: 4
+        limit: 4,
       },
     });
 
     if (response.data.data) {
-      await redisClient.setEx('feeds_items', 86400, JSON.stringify(response.data.data))
+      await redisClient.setEx(
+        "feeds_items",
+        86400,
+        JSON.stringify(response.data.data)
+      );
     }
 
     const feeds = response.data.data; // Los datos del feed estarán en la propiedad `data`
