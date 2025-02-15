@@ -20,7 +20,7 @@ const hostValidator = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(403).send("No puedes acceder a esta solicitud5555");
+    return res.status(403).send("No puedes acceder a esta solicitud");
   }
 };
 
