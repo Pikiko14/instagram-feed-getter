@@ -1,16 +1,14 @@
 const tokenValidator = async (req, res, next) => {
   try {
-    const { instagram_token } = req.headers;
-    console.log(req.headers);
-    console.log(instagram_token);
+    const { host } = req.headers;
 
-    if (!instagram_token) {
+    if (!host) {
       return res
         .status(403)
-        .json({ message: "No puedes acceder a esta solicitud33" });
+        .json({ message: "No puedes acceder a esta solicitud" });
     }
 
-    if (instagram_token !== process.env.SERVICE_TOKEN) {
+    if (host !== 'api.motowork.xyz') {
       return res
         .status(403)
         .json({ message: "No puedes acceder a esta solicitud" });
