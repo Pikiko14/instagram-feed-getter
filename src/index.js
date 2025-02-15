@@ -19,7 +19,7 @@ const corsOptions = {
     "https://app.motowork.xyz",
     "http://localhost:9001",
     "http://testbanner.test",
-    "http://admin.motowork.xyz/",
+    "http://admin.motowork.xyz",
     "https://admin.motowork.xyz",
     "http://app.motowork.xyz",
     "https://app.motowork.xyz",
