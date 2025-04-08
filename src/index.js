@@ -238,6 +238,7 @@ const validateToken = async () => {
       return { error: true, message: "La sesión expiro" };
     }
   } catch (error) {
+    console.log(error.response.data)
     return { error: true, message: "No se encontro sesión con instagram" };
   }
 };
