@@ -8,7 +8,7 @@ const tokenValidator = async (req, res, next) => {
         .json({ message: "No puedes acceder a esta solicitud" });
     }
 
-    if (host !== 'api.motowork.xyz') {
+    if (host !== 'api.motowork.co') {
       return res
         .status(403)
         .json({ message: "No puedes acceder a esta solicitud" });
