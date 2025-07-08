@@ -10,7 +10,12 @@ const hostValidator = async (req, res, next) => {
       "http://app.motowork.xyz/",
       "https://app.motowork.xyz/",
       "https://motowork.xyz/",
-      "http://motowork.xyz/"
+      "http://motowork.xyz/",
+
+      "http://motowork.co",
+      "https://motowork.co",
+      "http://admin.motowork.co",
+      "https://admin.motowork.co",
     ];
 
     const referer = req.get("Referer");
