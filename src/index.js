@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const qs = require("qs");
 const redis = require("redis");
 const cors = require("cors");
-cons = require("./middleware");
+const hostValidator = require("./middlewares/hostValidator");
 const tokenValidator = require("./middlewares/tokenValidator");
 
 dotenv.config();
@@ -46,7 +46,7 @@ redisClient.on("error", (err) => console.error("Redis error:", err));
 redisClient.connect();
 
 // Ruta para redirigir al usuario a la página de autorización de Instagram
-app.get("/auth", async (req, res) => {
+app.get("/auth", hostValidator, async (req, res) => {
   const cachedToken = await redisClient.get("access_token");
   const session = await validateToken();
 
@@ -101,7 +101,7 @@ app.get("/auth/callback", async (req, res) => {
 });
 
 // Ruta para validar y extender un token
-app.get("/validate-and-extend-token", async (req, res) => {
+app.get("/validate-and-extend-token", hostValidator, async (req, res) => {
   const cachedToken = await redisClient.get("access_token");
 
   if (cachedToken) {
