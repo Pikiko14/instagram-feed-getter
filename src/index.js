@@ -26,7 +26,9 @@ const corsOptions = {
     "https://motowork.xyz",
     "http://motowork.xyz",
     "http://motowork.co",
-    "https://motowork.co"
+    "https://motowork.co",
+    "http://admin.motowork.co",
+    "https://admin.motowork.co",
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
@@ -240,7 +242,7 @@ const validateToken = async () => {
       return { error: true, message: "La sesión expiro" };
     }
   } catch (error) {
-    console.log(error.response.data)
+    console.log(error.response.data);
     return { error: true, message: "No se encontro sesión con instagram" };
   }
 };
