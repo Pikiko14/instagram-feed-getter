@@ -24,7 +24,9 @@ const corsOptions = {
     "http://app.motowork.xyz",
     "https://app.motowork.xyz",
     "https://motowork.xyz",
-    "http://motowork.xyz"
+    "http://motowork.xyz",
+    "http://motowork.co",
+    "https://motowork.co"
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
